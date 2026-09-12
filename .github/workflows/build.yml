@@ -10,4 +10,16 @@ on:
 
 jobs:
   build:
-    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@main
+    # Pinned to v0.3.0 to MATCH the ZMK revision in config/west.yml.
+    #
+    # This workflow is not just orchestration — its "Check if building a board
+    # without explicit ZMK compat" step runs `west boards --format` against the
+    # Zephyr tree it just checked out. On main that format string asks for
+    # {qualifiers}, a hardware-model-v2 field that Zephyr 3.5.0 (which ZMK
+    # v0.3.0 vendors) does not have, so the step dies with KeyError: 'qualifiers'
+    # even though the firmware itself built fine.
+    #
+    # Rule: pin any reusable workflow that introspects the pinned tree.
+    # .github/workflows/draw.yml stays on @main because it filters zmk and
+    # zephyr out of its west update and never touches them.
+    uses: zmkfirmware/zmk/.github/workflows/build-user-config.yml@v0.3.0
