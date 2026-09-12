@@ -1,0 +1,53 @@
+name: Draw keymap
+
+on:
+  push:
+    paths:
+      - 'config/*.keymap'
+      - 'config/west.yml'
+      - 'keymap_drawer.config.yaml'
+      - 'scripts/build_viewer.py'
+      - '.github/workflows/draw.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  # Parses config/corne.keymap and commits keymap-drawer/corne.{yaml,svg}.
+  draw:
+    uses: caksoylar/keymap-drawer/.github/workflows/draw-zmk.yml@main
+    permissions:
+      contents: write
+    with:
+      keymap_patterns: config/corne.keymap
+      config_path: keymap_drawer.config.yaml
+      # Fetches zmk-helpers (skipping zmk/zephyr) so the keymap's
+      # #include "zmk-helpers/..." lines resolve during parsing.
+      west_config_path: config
+      output_folder: keymap-drawer
+      commit_message: 'keymap-drawer: regenerate diagram'
+      fail_on_error: true
+      # Pinned: 0.21.0 crashes against tree-sitter >= 0.25 ('Language' object
+      # has no attribute 'query'). 0.23.0 is what the committed diagram and
+      # viewer were generated with. Needs Python >= 3.12.
+      install_version: '0.23.0'
+
+  # Re-injects the parsed keymap into the interactive viewer, so viewer.html
+  # can never drift from the keymap the diagram was drawn from.
+  viewer:
+    needs: draw
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }}
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: pip install pyyaml
+      - run: python3 scripts/build_viewer.py
+      - uses: stefanzweifel/git-auto-commit-action@v7
+        with:
+          file_pattern: keymap-drawer/viewer.html
+          commit_message: 'keymap-drawer: refresh viewer data'

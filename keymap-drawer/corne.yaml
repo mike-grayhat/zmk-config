@@ -1,0 +1,432 @@
+layout: {zmk_keyboard: corne}
+layers:
+  Base:
+  - ESC
+  - Q
+  - W
+  - E
+  - R
+  - T
+  - Y
+  - U
+  - I
+  - O
+  - P
+  - '['
+  - TAB
+  - {t: A, h: LGUI}
+  - {t: S, h: LALT}
+  - {t: D, h: LCTRL}
+  - {t: F, h: LSHFT}
+  - G
+  - H
+  - {t: J, h: LSHFT}
+  - {t: K, h: LCTRL}
+  - {t: L, h: LALT}
+  - {t: ;, h: LGUI}
+  - ''''
+  - CAPS
+  - {t: Z, h: Button}
+  - {t: X, h: RALT}
+  - C
+  - V
+  - B
+  - N
+  - M
+  - ','
+  - {t: ., h: RALT}
+  - {t: /, h: Button}
+  - ']'
+  - {t: ESC, h: Media}
+  - {t: SPACE, h: Nav}
+  - {t: TAB, h: Mouse}
+  - {t: RET, h: Sym}
+  - {t: BSPC, h: Num}
+  - {t: DEL, h: Fun}
+  Extra:
+  - ESC
+  - Q
+  - W
+  - F
+  - P
+  - B
+  - J
+  - L
+  - U
+  - Y
+  - ''''
+  - '['
+  - TAB
+  - {t: A, h: LGUI}
+  - {t: R, h: LALT}
+  - {t: S, h: LCTRL}
+  - {t: T, h: LSHFT}
+  - G
+  - M
+  - {t: N, h: LSHFT}
+  - {t: E, h: LCTRL}
+  - {t: I, h: LALT}
+  - {t: O, h: LGUI}
+  - ''''
+  - CAPS
+  - {t: Z, h: Button}
+  - {t: X, h: RALT}
+  - C
+  - D
+  - V
+  - K
+  - H
+  - ','
+  - {t: ., h: RALT}
+  - {t: /, h: Button}
+  - ']'
+  - {t: ESC, h: Media}
+  - {t: SPACE, h: Nav}
+  - {t: TAB, h: Mouse}
+  - {t: RET, h: Sym}
+  - {t: BSPC, h: Num}
+  - {t: DEL, h: Fun}
+  Tap:
+  - ESC
+  - Q
+  - W
+  - E
+  - R
+  - T
+  - Y
+  - U
+  - I
+  - O
+  - P
+  - '['
+  - TAB
+  - A
+  - S
+  - D
+  - F
+  - G
+  - H
+  - J
+  - K
+  - L
+  - ''''
+  - ''''
+  - CAPS
+  - Z
+  - X
+  - C
+  - V
+  - B
+  - N
+  - M
+  - ','
+  - .
+  - /
+  - ']'
+  - LCTRL
+  - LALT
+  - LSHFT
+  - RET
+  - ESC
+  - {t: Base, s: 2×}
+  Button:
+  - ESC
+  - undo
+  - cut
+  - copy
+  - paste
+  - redo
+  - redo
+  - paste
+  - copy
+  - cut
+  - undo
+  - '['
+  - TAB
+  - LGUI
+  - LALT
+  - LCTRL
+  - LSHFT
+  - ''
+  - ''
+  - LSHFT
+  - LCTRL
+  - LALT
+  - LGUI
+  - ''''
+  - CAPS
+  - {t: undo, type: held}
+  - cut
+  - copy
+  - paste
+  - redo
+  - redo
+  - paste
+  - copy
+  - cut
+  - {t: undo, type: held alternate}
+  - ']'
+  - click M
+  - click L
+  - click R
+  - click R
+  - click L
+  - click M
+  Nav:
+  - ESC
+  - boot
+  - {t: Tap, s: 2×}
+  - {t: Extra, s: 2×}
+  - {t: Base, s: 2×}
+  - ''
+  - redo
+  - paste
+  - copy
+  - cut
+  - undo
+  - '['
+  - TAB
+  - LGUI
+  - LALT
+  - LCTRL
+  - LSHFT
+  - ''
+  - {t: caps word, s: CAPS}
+  - LEFT
+  - DOWN
+  - UP
+  - RIGHT
+  - ''''
+  - CAPS
+  - ''
+  - RALT
+  - {t: Num, s: 2×}
+  - {t: Nav, s: 2×}
+  - ''
+  - INS
+  - HOME
+  - pg dn
+  - pg up
+  - END
+  - ']'
+  - ''
+  - {type: held}
+  - ''
+  - RET
+  - BSPC
+  - DEL
+  Mouse:
+  - ESC
+  - boot
+  - {t: Tap, s: 2×}
+  - {t: Extra, s: 2×}
+  - {t: Base, s: 2×}
+  - ''
+  - redo
+  - paste
+  - copy
+  - cut
+  - undo
+  - '['
+  - TAB
+  - LGUI
+  - LALT
+  - LCTRL
+  - LSHFT
+  - ''
+  - ''
+  - 🖱 ←
+  - 🖱 ↓
+  - 🖱 ↑
+  - 🖱 →
+  - ''''
+  - CAPS
+  - ''
+  - RALT
+  - {t: Sym, s: 2×}
+  - {t: Mouse, s: 2×}
+  - ''
+  - '"'
+  - ''''
+  - ^
+  - '&'
+  - scrl →
+  - ']'
+  - ''
+  - ''
+  - {type: held}
+  - click R
+  - click L
+  - click M
+  Media:
+  - ESC
+  - boot
+  - {t: Tap, s: 2×}
+  - {t: Extra, s: 2×}
+  - {t: Base, s: 2×}
+  - ''
+  - RGB TOG
+  - RGB EFF
+  - RGB HUI
+  - RGB SAI
+  - RGB BRI
+  - '['
+  - TAB
+  - LGUI
+  - LALT
+  - LCTRL
+  - LSHFT
+  - ''
+  - EP TOG
+  - prev
+  - vol −
+  - vol +
+  - next
+  - ''''
+  - CAPS
+  - ''
+  - RALT
+  - {t: Fun, s: 2×}
+  - {t: Media, s: 2×}
+  - ''
+  - {t: out, s: USB}
+  - {t: BT 0, s: clear}
+  - {t: BT 1, s: clear}
+  - {t: BT 2, s: clear}
+  - {t: BT 3, s: clear}
+  - ']'
+  - {type: held}
+  - ''
+  - ''
+  - stop
+  - play
+  - mute
+  Num:
+  - ESC
+  - '['
+  - '7'
+  - '8'
+  - '9'
+  - ']'
+  - ''
+  - {t: Base, s: 2×}
+  - {t: Extra, s: 2×}
+  - {t: Tap, s: 2×}
+  - boot
+  - '['
+  - TAB
+  - ;
+  - '4'
+  - '5'
+  - '6'
+  - '='
+  - ''
+  - LSHFT
+  - LCTRL
+  - LALT
+  - LGUI
+  - ''''
+  - CAPS
+  - '`'
+  - '1'
+  - '2'
+  - '3'
+  - \
+  - ''
+  - {t: Num, s: 2×}
+  - {t: Nav, s: 2×}
+  - RALT
+  - ''
+  - ']'
+  - .
+  - '0'
+  - '-'
+  - ''
+  - {type: held}
+  - ''
+  Sym:
+  - ESC
+  - '{'
+  - '&'
+  - '*'
+  - (
+  - '}'
+  - ''
+  - {t: Base, s: 2×}
+  - {t: Extra, s: 2×}
+  - {t: Tap, s: 2×}
+  - boot
+  - '['
+  - TAB
+  - ':'
+  - $
+  - '%'
+  - ^
+  - +
+  - ''
+  - LSHFT
+  - LCTRL
+  - LALT
+  - LGUI
+  - ''''
+  - CAPS
+  - '~'
+  - '!'
+  - '@'
+  - '#'
+  - '|'
+  - ':'
+  - ''''
+  - '"'
+  - RALT
+  - ''
+  - ']'
+  - (
+  - )
+  - _
+  - {type: held}
+  - ''
+  - ''
+  Fun:
+  - ESC
+  - F12
+  - F7
+  - F8
+  - F9
+  - prt sc
+  - ''
+  - {t: Base, s: 2×}
+  - {t: Extra, s: 2×}
+  - {t: Tap, s: 2×}
+  - boot
+  - '['
+  - TAB
+  - F11
+  - F4
+  - F5
+  - F6
+  - scroll lk
+  - ''
+  - LSHFT
+  - LCTRL
+  - LALT
+  - LGUI
+  - ''''
+  - CAPS
+  - F10
+  - F1
+  - F2
+  - F3
+  - pause
+  - ''
+  - {t: Fun, s: 2×}
+  - {t: Media, s: 2×}
+  - RALT
+  - ''
+  - ']'
+  - menu
+  - SPACE
+  - TAB
+  - ''
+  - ''
+  - {type: held}

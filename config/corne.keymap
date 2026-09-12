@@ -1,0 +1,306 @@
+/*
+ * Chocofi — 42-key Corne-compatible split, nice!nano v2 + nice!view.
+ *
+ * Miryoku layer scheme, hand-written. Migrated off manna-harbour/miryoku_zmk
+ * so the keymap file says what the keyboard does, with no generator in between.
+ *
+ * Layer order is Miryoku's own (Button sits at 3, between Tap and Nav).
+ *
+ *  ╭────────────────────────┬────────────────────────╮
+ *  │  0   1   2   3   4   5 │  6   7   8   9  10  11 │
+ *  │ 12  13  14  15  16  17 │ 18  19  20  21  22  23 │
+ *  │ 24  25  26  27  28  29 │ 30  31  32  33  34  35 │
+ *  ╰───────────╮ 36  37  38 │ 39  40  41 ╭───────────╯
+ *              ╰────────────┴────────────╯
+ */
+
+#include <behaviors.dtsi>
+#include <dt-bindings/zmk/keys.h>
+#include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/ext_power.h>
+#include <dt-bindings/zmk/rgb.h>
+#include <dt-bindings/zmk/pointing.h>
+
+#include "zmk-helpers/helper.h"
+#include "zmk-helpers/key-labels/42.h"
+
+#define BASE   0
+#define EXTRA  1
+#define TAP    2
+#define BUTTON 3
+#define NAV    4
+#define MOUSE  5
+#define MEDIA  6
+#define NUM    7
+#define SYM    8
+#define FUN    9
+
+/* ── Home row mods ────────────────────────────────────────────────────────
+ *
+ * Replaces Miryoku's single `u_mt` (tap-preferred, 200ms, nothing else),
+ * whose problem was tap latency on the home row.
+ *
+ * Misfire protection here comes from the long tapping term plus the
+ * positional rules — `hold-trigger-key-positions` restricted to the OTHER
+ * hand (plus all thumbs), combined with `hold-trigger-on-release`.
+ * `require-prior-idle-ms` is not what makes these safe; it only cuts the
+ * delay while typing. Rule of thumb for it: 10500 / relaxed WPM.
+ * 150 is a starting point — tune it.
+ *
+ * The key groups below are built from key-labels/42.h's position labels rather
+ * than raw indices. zmk-helpers v0.3.0 ships the labels but not the groups —
+ * those landed on its main branch after the release — so they are spelled out
+ * here. Each hand is all 18 keys including the outer column.
+ */
+
+#define KEYS_L LT0 LT1 LT2 LT3 LT4 LT5  LM0 LM1 LM2 LM3 LM4 LM5  LB0 LB1 LB2 LB3 LB4 LB5
+#define KEYS_R RT0 RT1 RT2 RT3 RT4 RT5  RM0 RM1 RM2 RM3 RM4 RM5  RB0 RB1 RB2 RB3 RB4 RB5
+#define THUMBS LH0 LH1 LH2  RH0 RH1 RH2
+
+ZMK_HOLD_TAP(hml,
+    flavor = "balanced";
+    tapping-term-ms = <280>;
+    quick-tap-ms = <175>;
+    require-prior-idle-ms = <150>;
+    hold-trigger-key-positions = <KEYS_R THUMBS>;
+    hold-trigger-on-release;
+    bindings = <&kp>, <&kp>;
+)
+
+ZMK_HOLD_TAP(hmr,
+    flavor = "balanced";
+    tapping-term-ms = <280>;
+    quick-tap-ms = <175>;
+    require-prior-idle-ms = <150>;
+    hold-trigger-key-positions = <KEYS_L THUMBS>;
+    hold-trigger-on-release;
+    bindings = <&kp>, <&kp>;
+)
+
+/* ── Layer taps ───────────────────────────────────────────────────────────
+ *
+ * Override ZMK's built-in &lt rather than defining a parallel behavior, so
+ * the layers below read as plain `&lt NAV SPACE`.
+ *
+ * Deliberately NOT positional: every one of these layers puts something on
+ * the same hand as the key that holds it (e.g. Nav's mods sit under the left
+ * hand while the left thumb holds Nav), so a cross-hand rule would break them.
+ *
+ * "balanced" rather than Miryoku's "tap-preferred": the layer engages as soon
+ * as another key is pressed and released, instead of waiting out the term.
+ */
+&lt {
+    flavor = "balanced";
+    tapping-term-ms = <200>;
+    quick-tap-ms = <175>;
+};
+
+/* ── Base-layer switching ─────────────────────────────────────────────────
+ *
+ * Miryoku's double-tap guard, kept: a tap-dance whose first binding is
+ * &none, so a single stray press does nothing and switching base layers
+ * takes TWO taps.
+ */
+#define TO_GUARD(name, layer) \
+    ZMK_TAP_DANCE(name, tapping-term-ms = <200>; bindings = <&none>, <&to layer>;)
+
+TO_GUARD(to_base,  BASE)
+TO_GUARD(to_extra, EXTRA)
+TO_GUARD(to_tap,   TAP)
+TO_GUARD(to_nav,   NAV)
+TO_GUARD(to_mouse, MOUSE)
+TO_GUARD(to_media, MEDIA)
+TO_GUARD(to_num,   NUM)
+TO_GUARD(to_sym,   SYM)
+TO_GUARD(to_fun,   FUN)
+
+#undef TO_GUARD
+
+/* ── Shift-morphs carried over from Miryoku ───────────────────────────── */
+
+// tap: caps word | shift + tap: caps lock
+ZMK_MOD_MORPH(capsw,
+    bindings = <&caps_word>, <&kp CAPS>;
+    mods = <(MOD_LSFT|MOD_RSFT)>;
+)
+
+// tap: toggle BLE/USB output | shift + tap: force USB
+ZMK_MOD_MORPH(out_tog,
+    bindings = <&out OUT_TOG>, <&out OUT_USB>;
+    mods = <(MOD_LSFT|MOD_RSFT)>;
+)
+
+// tap: select BLE profile | shift + tap: select and clear its pairing
+#define BT_PROFILE(name, n) \
+    ZMK_MACRO(name##_clr, wait-ms = <0>; bindings = <&bt BT_SEL n &bt BT_CLR>;) \
+    ZMK_MOD_MORPH(name, \
+        bindings = <&bt BT_SEL n>, <&name##_clr>; \
+        mods = <(MOD_LSFT|MOD_RSFT)>; \
+    )
+
+BT_PROFILE(bt0, 0)
+BT_PROFILE(bt1, 1)
+BT_PROFILE(bt2, 2)
+BT_PROFILE(bt3, 3)
+
+#undef BT_PROFILE
+
+/* ── Shorthands used in the layers below ──────────────────────────────── */
+
+#define XXX &none
+
+// Clipboard (Linux/macOS set — Miryoku's default, not the _WIN variant)
+#define U_CUT  &kp LS(DEL)
+#define U_COPY &kp LC(INS)
+#define U_PSTE &kp LS(INS)
+#define U_UNDO &kp K_UNDO
+#define U_REDO &kp K_AGAIN
+
+// Outer columns. Physically present on this board and hardcoded across every
+// layer, exactly as the fork had them.
+#define OUTER_L1 &kp ESC
+#define OUTER_L2 &kp TAB
+#define OUTER_L3 &kp CAPS
+#define OUTER_R1 &kp LBKT
+#define OUTER_R2 &kp SQT
+#define OUTER_R3 &kp RBKT
+
+/ {
+    keymap {
+        compatible = "zmk,keymap";
+
+/* ╭─────────────────────────────────────────────────────────────────────────╮
+   │ BASE — QWERTY                                                           │
+   ╰─────────────────────────────────────────────────────────────────────────╯ */
+        base_layer {
+            display-name = "Base";
+            bindings = <
+ OUTER_L1  &kp Q         &kp W         &kp E          &kp R          &kp T       &kp Y   &kp U          &kp I          &kp O           &kp P              OUTER_R1
+ OUTER_L2  &hml LGUI A   &hml LALT S   &hml LCTRL D   &hml LSHFT F   &kp G       &kp H   &hmr LSHFT J   &hmr LCTRL K   &hmr LALT L     &hmr LGUI SEMI     OUTER_R2
+ OUTER_L3  &lt BUTTON Z  &hml RALT X   &kp C          &kp V          &kp B       &kp N   &kp M          &kp COMMA      &hmr RALT DOT   &lt BUTTON SLASH   OUTER_R3
+                                       &lt MEDIA ESC  &lt NAV SPACE  &lt MOUSE TAB   &lt SYM RET  &lt NUM BSPC  &lt FUN DEL
+            >;
+        };
+
+/* ╭─────────────────────────────────────────────────────────────────────────╮
+   │ EXTRA — Colemak-DH, same thumbs and mods as Base                        │
+   ╰─────────────────────────────────────────────────────────────────────────╯ */
+        extra_layer {
+            display-name = "Extra";
+            bindings = <
+ OUTER_L1  &kp Q         &kp W         &kp F          &kp P          &kp B       &kp J   &kp L          &kp U          &kp Y           &kp SQT            OUTER_R1
+ OUTER_L2  &hml LGUI A   &hml LALT R   &hml LCTRL S   &hml LSHFT T   &kp G       &kp M   &hmr LSHFT N   &hmr LCTRL E   &hmr LALT I     &hmr LGUI O        OUTER_R2
+ OUTER_L3  &lt BUTTON Z  &hml RALT X   &kp C          &kp D          &kp V       &kp K   &kp H          &kp COMMA      &hmr RALT DOT   &lt BUTTON SLASH   OUTER_R3
+                                       &lt MEDIA ESC  &lt NAV SPACE  &lt MOUSE TAB   &lt SYM RET  &lt NUM BSPC  &lt FUN DEL
+            >;
+        };
+
+/* ╭─────────────────────────────────────────────────────────────────────────╮
+   │ TAP — no hold-taps anywhere. Outer right thumb is the only way back.    │
+   ╰─────────────────────────────────────────────────────────────────────────╯ */
+        tap_layer {
+            display-name = "Tap";
+            bindings = <
+ OUTER_L1  &kp Q       &kp W      &kp E       &kp R       &kp T       &kp Y      &kp U    &kp I      &kp O     &kp P       OUTER_R1
+ OUTER_L2  &kp A       &kp S      &kp D       &kp F       &kp G       &kp H      &kp J    &kp K      &kp L     &kp SQT     OUTER_R2
+ OUTER_L3  &kp Z       &kp X      &kp C       &kp V       &kp B       &kp N      &kp M    &kp COMMA  &kp DOT   &kp SLASH   OUTER_R3
+                                  &kp LCTRL   &kp LALT    &kp LSHFT       &kp RET    &kp ESC   &to_base
+            >;
+        };
+
+/* ╭─────────────────────────────────────────────────────────────────────────╮
+   │ BUTTON — clipboard under both hands, mouse buttons on the thumbs        │
+   ╰─────────────────────────────────────────────────────────────────────────╯ */
+        button_layer {
+            display-name = "Button";
+            bindings = <
+ OUTER_L1  U_UNDO     U_CUT      U_COPY     U_PSTE     U_REDO      U_REDO   U_PSTE     U_COPY     U_CUT      U_UNDO     OUTER_R1
+ OUTER_L2  &kp LGUI   &kp LALT   &kp LCTRL  &kp LSHFT  XXX         XXX      &kp LSHFT  &kp LCTRL  &kp LALT   &kp LGUI   OUTER_R2
+ OUTER_L3  U_UNDO     U_CUT      U_COPY     U_PSTE     U_REDO      U_REDO   U_PSTE     U_COPY     U_CUT      U_UNDO     OUTER_R3
+                                 &mkp MB3   &mkp MB1   &mkp MB2        &mkp MB2   &mkp MB1   &mkp MB3
+            >;
+        };
+
+/* ╭─────────────────────────────────────────────────────────────────────────╮
+   │ NAV — arrows and clipboard right, mods left, base switching on top row  │
+   ╰─────────────────────────────────────────────────────────────────────────╯ */
+        nav_layer {
+            display-name = "Nav";
+            bindings = <
+ OUTER_L1  &bootloader  &to_tap    &to_extra  &to_base   XXX        U_REDO    U_PSTE     U_COPY     U_CUT      U_UNDO     OUTER_R1
+ OUTER_L2  &kp LGUI     &kp LALT   &kp LCTRL  &kp LSHFT  XXX        &capsw    &kp LEFT   &kp DOWN   &kp UP     &kp RIGHT  OUTER_R2
+ OUTER_L3  XXX          &kp RALT   &to_num    &to_nav    XXX        &kp INS   &kp HOME   &kp PG_DN  &kp PG_UP  &kp END    OUTER_R3
+                                   XXX        XXX        XXX            &kp RET    &kp BSPC   &kp DEL
+            >;
+        };
+
+/* ╭─────────────────────────────────────────────────────────────────────────╮
+   │ MOUSE — pointer on the right home row, mouse buttons on the thumbs      │
+   ╰─────────────────────────────────────────────────────────────────────────╯ */
+        mouse_layer {
+            display-name = "Mouse";
+            bindings = <
+ OUTER_L1  &bootloader  &to_tap    &to_extra  &to_base   XXX     U_REDO      U_PSTE            U_COPY            U_CUT           U_UNDO             OUTER_R1
+ OUTER_L2  &kp LGUI     &kp LALT   &kp LCTRL  &kp LSHFT  XXX     XXX         &mmv MOVE_LEFT    &mmv MOVE_DOWN    &mmv MOVE_UP    &mmv MOVE_RIGHT    OUTER_R2
+ OUTER_L3  XXX          &kp RALT   &to_sym    &to_mouse  XXX     &kp DQT     &kp SQT           &kp CARET         &kp AMPS        &msc SCRL_RIGHT    OUTER_R3
+                                   XXX        XXX        XXX         &mkp MB2   &mkp MB1   &mkp MB3
+            >;
+        };
+
+/* ╭─────────────────────────────────────────────────────────────────────────╮
+   │ MEDIA — volume and transport right, BLE profiles on the bottom row      │
+   ╰─────────────────────────────────────────────────────────────────────────╯ */
+        media_layer {
+            display-name = "Media";
+            bindings = <
+ OUTER_L1  &bootloader  &to_tap    &to_extra  &to_base   XXX   &rgb_ug RGB_TOG    &rgb_ug RGB_EFF  &rgb_ug RGB_HUI  &rgb_ug RGB_SAI  &rgb_ug RGB_BRI  OUTER_R1
+ OUTER_L2  &kp LGUI     &kp LALT   &kp LCTRL  &kp LSHFT  XXX   &ext_power EP_TOG  &kp C_PREV       &kp C_VOL_DN     &kp C_VOL_UP     &kp C_NEXT       OUTER_R2
+ OUTER_L3  XXX          &kp RALT   &to_fun    &to_media  XXX   &out_tog           &bt0             &bt1             &bt2             &bt3             OUTER_R3
+                                   XXX        XXX        XXX       &kp C_STOP   &kp C_PP   &kp C_MUTE
+            >;
+        };
+
+/* ╭─────────────────────────────────────────────────────────────────────────╮
+   │ NUM — numpad under the left hand, mods right                            │
+   ╰─────────────────────────────────────────────────────────────────────────╯ */
+        num_layer {
+            display-name = "Num";
+            bindings = <
+ OUTER_L1  &kp LBKT   &kp N7   &kp N8   &kp N9   &kp RBKT    XXX   &to_base    &to_extra  &to_tap    &bootloader  OUTER_R1
+ OUTER_L2  &kp SEMI   &kp N4   &kp N5   &kp N6   &kp EQUAL   XXX   &kp LSHFT   &kp LCTRL  &kp LALT   &kp LGUI     OUTER_R2
+ OUTER_L3  &kp GRAVE  &kp N1   &kp N2   &kp N3   &kp BSLH    XXX   &to_num     &to_nav    &kp RALT   XXX          OUTER_R3
+                               &kp DOT  &kp N0   &kp MINUS       XXX   XXX   XXX
+            >;
+        };
+
+/* ╭─────────────────────────────────────────────────────────────────────────╮
+   │ SYM — symbols under the left hand, mods right                           │
+   ╰─────────────────────────────────────────────────────────────────────────╯ */
+        sym_layer {
+            display-name = "Sym";
+            bindings = <
+/* Right pinky column: the fork put `[` and `'` here, but both duplicate the
+   outer column immediately to their right, and doing so cost the bootloader
+   key and the GUI mod. Restored. */
+ OUTER_L1  &kp LBRC   &kp AMPS   &kp ASTRK  &kp LPAR   &kp RBRC   XXX        &to_base   &to_extra  &to_tap    &bootloader  OUTER_R1
+ OUTER_L2  &kp COLON  &kp DLLR   &kp PRCNT  &kp CARET  &kp PLUS   XXX        &kp LSHFT  &kp LCTRL  &kp LALT   &kp LGUI     OUTER_R2
+ OUTER_L3  &kp TILDE  &kp EXCL   &kp AT     &kp HASH   &kp PIPE   &kp COLON  &kp SQT    &kp DQT    &kp RALT   XXX        OUTER_R3
+                                 &kp LPAR   &kp RPAR   &kp UNDER      XXX   XXX   XXX
+            >;
+        };
+
+/* ╭─────────────────────────────────────────────────────────────────────────╮
+   │ FUN — function keys under the left hand, mods right                     │
+   ╰─────────────────────────────────────────────────────────────────────────╯ */
+        fun_layer {
+            display-name = "Fun";
+            bindings = <
+ OUTER_L1  &kp F12  &kp F7   &kp F8    &kp F9    &kp PSCRN         XXX   &to_base   &to_extra  &to_tap    &bootloader  OUTER_R1
+ OUTER_L2  &kp F11  &kp F4   &kp F5    &kp F6    &kp SLCK          XXX   &kp LSHFT  &kp LCTRL  &kp LALT   &kp LGUI     OUTER_R2
+ OUTER_L3  &kp F10  &kp F1   &kp F2    &kp F3    &kp PAUSE_BREAK   XXX   &to_fun    &to_media  &kp RALT   XXX          OUTER_R3
+                             &kp K_APP &kp SPACE &kp TAB               XXX   XXX   XXX
+            >;
+        };
+    };
+};

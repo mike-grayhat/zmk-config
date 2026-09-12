@@ -1,0 +1,21 @@
+# Old clones and the replaced fork — staged for deletion, not part of this config
+/_obsolete/
+
+# Local west workspace / build output
+/.west/
+/build/
+/modules/
+/tools/
+/bootloader/
+/zephyr/
+/zmk/
+/zmk-helpers/
+
+# Firmware stays out of git entirely. It is build output, and it is
+# reproducible: ZMK and zmk-helpers are pinned by commit in config/west.yml,
+# so any commit of this repo rebuilds its own exact firmware. CI also uploads
+# a `firmware` artifact on every push. Committed binaries would bloat history
+# permanently for no recovery value.
+/firmware/
+
+.DS_Store

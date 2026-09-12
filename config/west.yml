@@ -1,0 +1,25 @@
+manifest:
+  remotes:
+    - name: zmkfirmware
+      url-base: https://github.com/zmkfirmware
+    - name: urob
+      url-base: https://github.com/urob
+  projects:
+    # ZMK v0.3.0, pinned by commit rather than tag so the revision cannot move.
+    #
+    # Deliberately a RELEASE, not `main`. ZMK's own build workflow tells you to
+    # pin to a release, and main is currently mid-migration to Zephyr's
+    # hardware model v2, where `nice_nano_v2` no longer exists as a board name
+    # (it becomes `nice_nano@2.0.0/nrf52840/zmk`). Bump this deliberately.
+    - name: zmk
+      remote: zmkfirmware
+      revision: edf5c0814fd3ea202e43aad2d68fd32e882a518c # v0.3.0
+      import: app/west.yml
+
+    # zmk-helpers v0.3.0. Its versions track ZMK releases — keep this aligned
+    # with the ZMK revision above.
+    - name: zmk-helpers
+      remote: urob
+      revision: b1548efd28d2cc64b9506654e6883695c258190f # v0.3.0
+  self:
+    path: config
