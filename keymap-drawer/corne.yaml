@@ -178,7 +178,7 @@ layers:
   - {t: Tap, s: 2×}
   - {t: Extra, s: 2×}
   - {t: Base, s: 2×}
-  - ''
+  - '&to_game'
   - redo
   - paste
   - copy
@@ -221,7 +221,7 @@ layers:
   - {t: Tap, s: 2×}
   - {t: Extra, s: 2×}
   - {t: Base, s: 2×}
-  - ''
+  - '&to_game'
   - redo
   - paste
   - copy
@@ -264,7 +264,7 @@ layers:
   - {t: Tap, s: 2×}
   - {t: Extra, s: 2×}
   - {t: Base, s: 2×}
-  - ''
+  - '&to_game'
   - RGB TOG
   - RGB EFF
   - RGB HUI
@@ -308,7 +308,7 @@ layers:
   - '8'
   - '9'
   - ']'
-  - ''
+  - '&to_game'
   - {t: Base, s: 2×}
   - {t: Extra, s: 2×}
   - {t: Tap, s: 2×}
@@ -351,7 +351,7 @@ layers:
   - '*'
   - (
   - '}'
-  - ''
+  - '&to_game'
   - {t: Base, s: 2×}
   - {t: Extra, s: 2×}
   - {t: Tap, s: 2×}
@@ -394,7 +394,7 @@ layers:
   - F8
   - F9
   - prt sc
-  - ''
+  - '&to_game'
   - {t: Base, s: 2×}
   - {t: Extra, s: 2×}
   - {t: Tap, s: 2×}
@@ -430,3 +430,89 @@ layers:
   - ''
   - ''
   - {type: held}
+  Game:
+  - TAB
+  - Q
+  - W
+  - E
+  - R
+  - T
+  - Y
+  - U
+  - I
+  - O
+  - P
+  - '['
+  - LSHFT
+  - A
+  - S
+  - D
+  - F
+  - G
+  - H
+  - J
+  - K
+  - L
+  - ;
+  - ''''
+  - LCTRL
+  - Z
+  - X
+  - C
+  - V
+  - B
+  - N
+  - M
+  - ','
+  - .
+  - /
+  - ']'
+  - LALT
+  - SPACE
+  - GameNum
+  - RET
+  - ESC
+  - {t: Base, s: 2×}
+  GameNum:
+  - Y
+  - U
+  - '7'
+  - '8'
+  - '9'
+  - P
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - H
+  - J
+  - '4'
+  - '5'
+  - '6'
+  - ESC
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - N
+  - M
+  - '1'
+  - '2'
+  - '3'
+  - I
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {type: held}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}

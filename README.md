@@ -24,8 +24,39 @@ customisation.
 | 7 | Num    | hold right thumb BSPC |
 | 8 | Sym    | hold right thumb RET |
 | 9 | Fun    | hold right thumb DEL |
+| 10 | Game  | two taps, from the free slot on any held layer's top row |
+| 11 | GameNum | hold Game's left inner thumb |
 
-Layer order is Miryoku's own — Button sits at 3, between Tap and Nav.
+Layers 0–9 are Miryoku's own order — Button sits at 3, between Tap and Nav.
+Game and GameNum are additions.
+
+### Game
+
+Left hand drives, with no hold-taps anywhere so nothing can misfire mid-fight.
+The outer column is the usual gaming edge — `TAB` / `LSHFT` / `LCTRL` — and
+carries **no ESC**; ESC is on the right thumb, where the hand that isn't on
+WASD can reach it. `SPACE` sits on the same thumb it uses on Base. The right
+half stays QWERTY so you can type in chat without leaving the layer.
+
+Exit is `→Base` on the outer right thumb, the same gesture as Tap, and it keeps
+the double-tap guard so you cannot fall out of the layer by brushing it.
+
+Holding the left inner thumb gives **GameNum**, which lives entirely on the
+left half — the mouse is in the right hand, so the right half is unreachable
+mid-game:
+
+```
+physical:  ESC  Q  W  E  R  T          sends:  Y  U  7  8  9  P
+           TAB  A  S  D  F  G                  H  J  4  5  6  ESC
+          CAPS  Z  X  C  V  B                  N  M  1  2  3  I
+```
+
+`4 5 6` land on `S D F` — ring, middle, index — so the hand never moves, and
+ESC sits on `G` under the index finger. The right half is entirely `&trans`,
+so it passes through to Game unchanged whether or not the layer is held.
+
+The six `→Game` keys went into slots that were `&none` in the fork — the one
+free position on each held layer's top row. Nothing was displaced.
 
 Base-layer switching (the `Base` / `Extra` / `Tap` keys on the top row of
 Nav/Mouse/Media and Num/Sym/Fun) keeps Miryoku's **double-tap guard**: each is a
